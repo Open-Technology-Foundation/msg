@@ -25,30 +25,30 @@ Here's a quick example of how to use the `msg` module:
 
 ```python
 from msg import msg
-  m = msg()
-  m.msg('Hello World, to stdout.')
-  m.set_prefix('myprog')
-  m.msg('This is msg.msg(), with a prefix "myprog", to stdout')
-  m.error("This is msg.error(), to stderr")
-  m.warn('This is msg.warn(), to stderr')
-  m.warn('This is a multi-line msg.warn() message.', 
-      'This is the next line.', '... and so on ..., to stderr')
-  m.info('This is msg.info(), to stdout')
-  
-  # Make new default colours for msg.info() and msg.WARN()
-  m.set_prefix('myprog, colorstalk') # set a double level prefix
-  m.info(f"Double prefix '{m.prefix}', from msg.info(), to stdout")
-  m.msg(f"msg.msg() with prefix '{m.prefix}'")
-  m.set_msg_colors(
-      info_fore=colorama.Fore.RED, 
-      info_style=colorama.Style.BRIGHT, 
-      warn_fore=colorama.Fore.LIGHTBLACK_EX, 
-      warn_back=colorama.Back.WHITE
-    )
-  m.info('This is now msg.info()', 'with new default colours.')
-  m.warn('This is now msg.warn()', 'with new default colours.')
-  m.set_prefix('')
-  m.msg('', 'Now back to msg.msg() without prefixes.', '')
+m = msg()
+m.msg('Hello World, to stdout.')
+m.set_prefix('myprog')
+m.msg('This is msg.msg(), with a prefix "myprog", to stdout')
+m.error("This is msg.error(), to stderr")
+m.warn('This is msg.warn(), to stderr')
+m.warn('This is a multi-line msg.warn() message.', 
+    'This is the next line.', '... and so on ..., to stderr')
+m.info('This is msg.info(), to stdout')
+ 
+# Make new default colours for msg.info() and msg.WARN()
+m.set_prefix('myprog, colorstalk') # set a double level prefix
+m.info(f"Double prefix '{m.prefix}', from msg.info(), to stdout")
+m.msg(f"msg.msg() with prefix '{m.prefix}'")
+m.set_msg_colors(
+    info_fore=colorama.Fore.RED, 
+    info_style=colorama.Style.BRIGHT, 
+    warn_fore=colorama.Fore.LIGHTBLACK_EX, 
+    warn_back=colorama.Back.WHITE
+  )
+m.info('This is now msg.info()', 'with new default colours.')
+m.warn('This is now msg.warn()', 'with new default colours.')
+m.set_prefix('')
+m.msg('', 'Now back to msg.msg() without prefixes.', '')
 ```
 
 ## Methods Overview
