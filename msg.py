@@ -11,7 +11,8 @@ class Msg:
   message prefix, and functions to print standard, info, 
   warning, and error messages.
 
-  Example usage:
+  Example usage: 
+  ```
   import msg
   m = msg()
 
@@ -36,6 +37,7 @@ class Msg:
   m.warn('This is msg.warn()', 'with new default colours.')
   m.prefix_set('')
   m.msg('', 'Now back to msg.msg() without prefixes.', '')
+  ```
   """
   def __init__(self):
     """
