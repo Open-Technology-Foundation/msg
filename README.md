@@ -1,88 +1,80 @@
-# msg - Message Printing Module
 
-The `msg` module provides a simple and convenient way to print coloured, formatted messages to the terminal. It supports automatic terminal size detection, global message prefixing, and offers functions to print standard, info, warning, and error messages with customization.
+# Msg - Terminal Message Printing Module
+
+A Python module that provides the `Msg` class to handle the printing of simple, coloured, and formatted messages to the terminal. Features include automatic terminal size detection, global message prefix, custom formatting, colour and style control, and optional text wrapping.
 
 ## Features
 
-- **Automatic Terminal Size Detection**: Automatically detects the terminal's columns and rows.
-- **Global Message Prefix**: Allows setting a global prefix for all messages.
-- **Customizable Colours**: Set custom colours for different types of messages.
-- **Message Types**: Print standard, info, warning, and error messages with custom formatting.
+- **Automatic Terminal Size Detection:** Adjusts to the current terminal's size.
+- **Global Message Prefix:** Prefixes can be added, removed, and manipulated.
+- **Message Types:** Standard, info, warning, and error messages with custom formatting.
+- **Colour and Style Control:** Customisable foreground, background, and styles.
+- **Text Wrapping:** Optional text wrapping based on terminal width.
 
 ## Installation
 
-Ensure that the `colorama` package is installed, as it is a required dependency.
+The class requires the `colorama` package for colour handling. Make sure to install it using:
 
-```bash
+\`\`\`bash
 pip install colorama
-```
-
-Then, download the `msg.py` file and import it into your project.
+\`\`\`
 
 ## Usage
 
-Here's a quick example of how to use the `msg` module:
+Import the `Msg` class and create an instance to begin printing messages:
 
-```python
-from msg import msg
-m = msg()
-m.msg('Hello World, to stdout.')
-m.set_prefix('myprog')
-m.msg('This is msg.msg(), with a prefix "myprog", to stdout')
-m.error("This is msg.error(), to stderr")
-m.warn('This is msg.warn(), to stderr')
-m.warn('This is a multi-line msg.warn() message.', 
-    'This is the next line.', '... and so on ..., to stderr')
-m.info('This is msg.info(), to stdout')
- 
-# Make new default colours for msg.info() and msg.WARN()
-m.set_prefix('myprog, colorstalk') # set a double level prefix
-m.info(f"Double prefix '{m.prefix}', from msg.info(), to stdout")
-m.msg(f"msg.msg() with prefix '{m.prefix}'")
-m.set_msg_colors(
-    info_fore=colorama.Fore.RED, 
-    info_style=colorama.Style.BRIGHT, 
-    warn_fore=colorama.Fore.LIGHTBLACK_EX, 
-    warn_back=colorama.Back.WHITE
-  )
-m.info('This is now msg.info()', 'with new default colours.')
-m.warn('This is now msg.warn()', 'with new default colours.')
-m.set_prefix('')
-m.msg('', 'Now back to msg.msg() without prefixes.', '')
-```
+\`\`\`python
+from msg import Msg
+m = Msg()
+m.info('This is an info message.')
+m.set_columns(40) # reset columns to 40
+m.enable_color(True)
+m.warn('This is a warning message.')
+m.line()
+\`\`\`
 
-## Methods Overview
+## Methods
 
-### Initialization
+### `set_columns(newcolumns: int)`
 
-- `__init__`: Initializes the `msg` object, setting default terminal size, colour usage, and message prefix.
+Sets the number of screen columns for the terminal.
 
-### Terminal Configuration
+### `set_rows(newrows: int)`
 
-- `set_columns`: Sets the number of screen columns for the terminal.
-- `set_rows`: Sets the number of rows for the terminal screen.
-- `set_color`: Sets whether to print messages in colour.
+Sets the number of rows for the terminal screen.
 
-### Message Customization
+### `enable_color(color_enable: bool)`
 
-- `set_msg_colors`: Sets custom colours for standard, info, warning, and error messages.
-- `set_prefix`: Sets the global prefix for messages.
+Sets whether to print messages in colour.
 
-### Message Printing
+### `msg, info, warn, error`
 
-- `msg`: Prints a standard message to stdout.
-- `info`: Prints an info message to stdout.
-- `warn`: Prints a warning message to stderr.
-- `error`: Prints an error message to stderr.
+Print messages of different types.
 
-## Examples and Documentation
+### `line`
+
+Print lines.
+
+## Examples
+
+See the examples provided at the end of the `msg.py` file to explore various ways to use the `Msg` class.
 
 For more detailed examples and comprehensive method documentation, please refer to the docstrings within the `msg.py` file.
 
-## Contributing
+## Notes
 
-If you find any bugs or have suggestions for improvements, please open an issue or submit a pull request.
+- Colours can also be set using abbreviations (see `set_colors()` method in the code).
+- Ensure you have the required dependencies installed.
 
 ## License
 
 This project is released under the GPL 3 License. See the LICENSE file for more details.
+
+## Contributing
+
+If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcome.
+
+## Support
+
+If you encounter any issues, please open an issue on GitHub.
+
