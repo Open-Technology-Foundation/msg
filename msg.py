@@ -6,66 +6,109 @@ import textwrap as tw
 
 class Msg:
   """
-  Print simple, coloured, formatted messages to the terminal.
+  A class to handle printing of simple, coloured, formatted 
+  messages to the terminal.
+  
   Features include automatic terminal size detection, global 
   message prefix, and functions to print standard, info, 
   warning, and error messages.
 
-  Example usage: 
-  ```
-  import msg
-  m = msg()
+  Features:
+  - Automatic terminal size detection: Adjusts to the current 
+    terminal's size.
+  - Global message prefix: Prefixes can be added, removed, and 
+    manipulated.
+  - Message types: Standard, info, warning, and error messages 
+    with custom formatting.
+  - Colour and style control: Customisable foreground, 
+    background, and styles.
+  - Text wrapping: Optional text wrapping based on terminal 
+    width.
 
-  m.msg('Hello World (to stdout)')
-  m.prefix_set('myprog')
-  m.msg('This is msg.msg(), with a prefix "myprog" (to stdout)')
-  m.error("This is msg.error() (to stderr)")
-  m.warn('This is msg.warn() (to stderr)')
-  m.info('This is msg.info() (to stdout)')
-  m.warn('This is a multi-line msg.warn() message.', 
-      'This is the next line.', 
-      '... and so on ...',
-      '(to stderr)')
-  
-  m.prefix_add('color') # set a double level prefix
-  m.info(f"Double prefix '{m.prefix}', from msg.info() (to stdout)")
-  m.msg(f'msg.msg() with prefix "{m.prefix}"')
-  m.msg('Making new default colours for msg.info() and msg.warn()')
-  m.set_colors(info_fore='RED', info_style='BRIGHT', 
-      warn_fore='RED', warn_back='WHITE', warn_style='BRIGHT')
-  m.info('This is msg.info()', 'with new default colours.')
-  m.warn('This is msg.warn()', 'with new default colours.')
-  m.prefix_set('')
-  m.msg('', 'Now back to msg.msg() without prefixes.', '')
-  ```
+  Attributes:
+    columns (int): Terminal column size, auto-detected or set 
+        manually.
+    rows (int): Terminal row size, auto-detected or set 
+        manually.
+    use_color (bool): Enable or disable colour in messages.
+    use_textwrap (bool): Enable or disable text wrapping.
+    prefixes (list): List of global prefixes for messages.
+    prefix_separator (str): Separator used between prefixes.
+    msg_fore, msg_back, msg_style (str): Standard message 
+        colours and style.
+    info_fore, info_back, info_style (str): Info message 
+        colours and style.
+    warn_fore, warn_back, warn_style (str): Warning message 
+        colours and style.
+    error_fore, error_back, error_style (str): Error message 
+        colours and style.
+
+  Methods:
+    set_columns(newcolumns: int): Set terminal column size.
+    set_rows(newrows: int): Set terminal row size.
+    enable_color(color_enable: bool): Enable/disable colour.
+    msg, info, warn, error: Print messages of different types.
+    line: Print lines.
+
+  Example Usage:
+    from msg import Msg
+    m = Msg()
+    m.info('This is an info message.')
+    m.set_columns(40) # reset columns to 40
+    m.enable_color(True)
+    m.warn('This is a warning message.')
+    m.line()
+
+  Dependencies:
+    The class requires the 'colorama' package for colour 
+    handling.  Colours can also be set using abbreviations
+    (see set_colors()).
+    
+    The class also requires module sys, shutil, and textwrap. 
+
   """
-  def __init__(self):
+  def __init__(self, columns:int=None, rows:int=None, use_color:bool=None,
+      use_textwrap:bool=True, prefixes:list=[], prefix_separator:str=': ',
+      msg_fore:str=colorama.Fore.WHITE,   msg_back:str=colorama.Back.BLACK,   msg_style:str=colorama.Style.NORMAL,
+      info_fore:str=colorama.Fore.GREEN,  info_back:str=colorama.Back.BLACK,  info_style:str=colorama.Style.DIM,
+      warn_fore:str=colorama.Fore.YELLOW, warn_back:str=colorama.Back.BLACK,  warn_style:str=colorama.Style.NORMAL,
+      error_fore:str=colorama.Fore.RED,   error_back:str=colorama.Back.BLACK, error_style:str=colorama.Style.BRIGHT):
     """
     Initialises the msg object, setting default terminal size, 
     colour usage and message prefix.
     """
-    # Query the terminal size
-    self.columns, self.rows = get_terminal_size()
-    # Determine if the terminal supports colour
-    self.use_color = self.is_terminal(sys.stdout)
+    if not columns:
+      # Query the terminal columns size
+      self.columns, _ = get_terminal_size()
+    else:
+      self.columns = columns
+    if not rows:
+      # Query the terminal rows size
+      _, self.rows = get_terminal_size()
+    else:
+      self.rows = rows
+    if use_color is None:
+      # Determine if the terminal supports colour
+      self.use_color = self.is_terminal(sys.stdout)
+    else:
+      self.use_color = use_color
     # global textwrap flag
-    self.use_textwrap = True
+    self.use_textwrap     = use_textwrap
     # Initialise default message prefix and separator
-    self.prefixes = []
-    self.prefix_separator = ': '
-    # Initialise default colours
-    self.msg_fore     = colorama.Fore.WHITE
-    self.msg_back     = colorama.Back.BLACK
-    self.msg_style    = colorama.Style.NORMAL
-    self.info_fore    = colorama.Fore.GREEN
-    self.info_back    = colorama.Back.BLACK
-    self.info_style   = colorama.Style.DIM
-    self.warn_fore    = colorama.Fore.YELLOW
-    self.warn_back    = colorama.Back.BLACK
-    self.warn_style   = colorama.Style.NORMAL
-    self.error_fore   = colorama.Fore.RED
-    self.error_back   = colorama.Back.BLACK
-    self.error_style  = colorama.Style.BRIGHT
+    self.prefixes         = prefixes.copy() # Using copy() to avoid mutable default argument
+    self.prefix_separator = prefix_separator
+    self.msg_fore         = msg_fore
+    self.msg_back         = msg_back
+    self.msg_style        = msg_style
+    self.info_fore        = info_fore
+    self.info_back        = info_back
+    self.info_style       = info_style
+    self.warn_fore        = warn_fore
+    self.warn_back        = warn_back
+    self.warn_style       = warn_style
+    self.error_fore       = error_fore
+    self.error_back       = error_back
+    self.error_style      = error_style
 
   def is_terminal(self, stream) -> bool:
     """
@@ -304,16 +347,11 @@ class Msg:
       m.print_msg('Hello', 'World', sep=' ', end='!', fore=colorama.Fore.RED)
     """
     # Set defaults if no values were provided
-    if back is None:
-      back = self.msg_back
-    if fore is None:
-      fore = self.msg_fore
-    if style is None:
-      style = self.msg_style
-    if wrap is None:
-      wrap = self.use_textwrap
-    if file is None:
-      file = sys.stdout
+    if back  is None: back  = self.msg_back
+    if fore  is None: fore  = self.msg_fore
+    if style is None: style = self.msg_style
+    if wrap  is None: wrap  = self.use_textwrap
+    if file  is None: file  = sys.stdout
     ppref = self.prefix_separator.join(self.prefixes).strip()
     if msg_type:
       if ppref: ppref += self.prefix_separator
@@ -328,7 +366,6 @@ class Msg:
                     subsequent_indent=ppref,
                     fix_sentence_endings=True),
           file=file)
-#          sep, end=end, file=file)
     if self.use_color:
       print(colorama.Style.RESET_ALL, sep='', end='', file=file)
 
@@ -379,30 +416,49 @@ class Msg:
     self.print_msg(*args, fore=self.error_fore, back=self.error_back, 
         style=self.error_style, sep=sep, end=end, file=file, msg_type='error')
 
+  def line(self, cols:int=None, char:str='-', sep='\n', end='', file=sys.stdout) -> None:
+    """
+    Prints a `cols` number of 'char'.
+    Args:
+      cols: Number of columns; default is current screen columns. 
+      char: Character to repeat; default is -.
+    Example:
+      m.line(char='_')
+    """
+    if cols is None: cols = self.columns
+    ppref_len = len(self.prefix_separator.join(self.prefixes).strip())
+    if ppref_len:
+      ppref_len += len(self.prefix_separator)
+      cols = cols - ppref_len
+      if cols < 1: cols = 0
+    self.print_msg(char * cols, fore=self.msg_fore, back=self.msg_back, 
+        style=self.msg_style, sep=sep, end=end, file=file, msg_type='')
 
 if __name__ == '__main__':
   # for testing only
   #import msg
   m = Msg()
-  m.enable_color(True) # only required if you want coloured output to file
+  m.enable_color(True) # only required to force coloured output to file
   m.prefix_set('myprog') # make a prefix for following msg's 
   m.info('Hello World (to stdout)')
   m.msg('This is m.msg(), with a prefix "myprog" (to stdout)')
   m.info('This is m.info() (to stdout)')
   m.warn('This is m.warn() (to stderr)')
-  m.error("This is m.error() (to stderr)", '\n')
+  m.error("This is m.error() (to stderr)")
+  m.line()
   m.warn('This is a multi-line m.warn() message.', 
       'This is the next line.', '(to stderr)')
   m.prefix_add('color') # set a double level prefix
   m.info(f"Double prefix '{m.prefixes}', from m.info() (to stdout)")
   m.msg(f"m.msg() with prefix '{m.prefixes}'")
-
+  m.line()
   m.msg('Make new default colours for m.info() and m.warn()')
   m.set_colors(info_fore='LIGHTBLUE_EX', info_style='BRIGHT', 
       warn_fore='RED', warn_back='WHITE', warn_style='BRIGHT')
   m.info('This is m.info()', 'with new default colours.')
   m.warn('This is m.warn()', 'with new default colours.')
   m.prefix_set('')
+  m.line()
   m.msg('', 'Now back to m.msg() without prefixes.', '')
 
   m.prefix_set('colors')
@@ -417,30 +473,21 @@ if __name__ == '__main__':
     if color == 'BLACK': continue   # don't need black on black
     m.prefix_add(color)
     m.set_colors(info_fore=color, info_back='black')
-    m.msg('-' * 40)
+    m.line(52)
     for style in all_styles:
       m.prefix_add(style)
       m.set_colors(info_style=style)
       m.info('Hello World.')
       m.prefix_pop()
     m.prefix_pop()
-  print('\n\n')
+  m.line()
 
-  m = Msg()
-  m.enable_color(True) # only required if you want coloured output to file
-  m.prefix_set('textwrap')
-
+  m = Msg(prefixes=['textwrap'], use_color=True, columns=60, prefix_separator='> ')
   m.prefix_add(f'default {m.columns} cols')
   m.warn('This is a very, very, very long line that needs to be wrapped. Or else it will look like crap.', '')
   m.prefix_pop()
-
-  m.prefix_add('60 cols')
-  m.set_columns(60)
-  m.warn('This is a very, very, very long line that needs to be wrapped. Or else it will look like crap.  Note that wrapping cols includes the length of the current prefixes.', '')
-  m.prefix_pop()
-
   m.prefix_add('disabled')
   m.enable_textwrap(False)
+  m.line()
   m.warn("This is a very, very, very long line that doesn't want to be wrapped. Even if it will look like crap.")
   m.prefix_pop()
-
