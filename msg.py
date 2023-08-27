@@ -1,11 +1,5 @@
 #!/usr/bin/python
-import sys
-import colorama
-from shutil import get_terminal_size
-import textwrap as tw
-
-class Msg:
-  """
+"""
   A class to handle printing of simple, coloured, formatted 
   messages to the terminal.
   
@@ -25,6 +19,15 @@ class Msg:
   - Text wrapping: Optional text wrapping based on terminal 
     width.
 
+"""
+__version__ = '0.8.1'
+import sys
+import colorama
+from shutil import get_terminal_size
+import textwrap as tw
+
+class Msg:
+  """
   Attributes:
     columns (int): Terminal column size, auto-detected or set 
         manually.
@@ -491,3 +494,4 @@ if __name__ == '__main__':
   m.line()
   m.warn("This is a very, very, very long line that doesn't want to be wrapped. Even if it will look like crap.")
   m.prefix_pop()
+
