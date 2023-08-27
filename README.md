@@ -1,4 +1,3 @@
-
 # Msg - Terminal Message Printing Module
 
 A Python module that provides the `Msg` class to handle the printing of simple, coloured, and formatted messages to the terminal. Features include automatic terminal size detection, global message prefix, custom formatting, colour and style control, and optional text wrapping.
