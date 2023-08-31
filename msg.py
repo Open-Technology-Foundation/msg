@@ -25,7 +25,7 @@
   For unittests see `unittests/msg-test.py`.
 
 """
-__version__ = '0.8.1'
+__version__ = '0.8.2'
 import sys
 import colorama
 from shutil import get_terminal_size
