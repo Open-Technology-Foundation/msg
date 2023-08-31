@@ -75,7 +75,7 @@ class Msg:
     handling.  Colours can also be set using abbreviations
     (see `set_colors()`).
     
-    The class also requires module `sys`, `shutil`, and `textwrap`. 
+    The class also requires modules `sys`, `shutil`, and `textwrap`. 
 
   """
   def __init__(self, columns:int=None, rows:int=None, use_color:bool=None,
@@ -90,16 +90,18 @@ class Msg:
     colour usage and message prefix.
     """
     self.version = __version__
-    if not columns:
+    if columns is None:
       # Query the terminal columns size
       self.columns, _ = get_terminal_size()
+    elif columns == 0:
+      self.columns = 65536
     else:
-      self.columns = columns
+      self.columns = abs(columns)
     if not rows:
       # Query the terminal rows size
       _, self.rows = get_terminal_size()
     else:
-      self.rows = rows
+      self.rows = abs(rows)
     if use_color is None:
       # Determine if the terminal supports colour
       self.use_color = self.is_terminal(sys.stdout)
@@ -139,18 +141,21 @@ class Msg:
   def set_columns(self, newcolumns: int) -> int:
     """ 
     Sets the number of screen columns for the terminal.
+    Value of 0 sets new columns to 65536.
     Args:
       newcolumns: The new column size for the terminal.
     Returns:
       int: The current column size.
     Raises:
-      ValueError: If the newcolumns value is not a positive integer.
+      ValueError: If the newcolumns value is not an integer.
     Example:
       m.set_columns(80)
     """
-    if not isinstance(newcolumns, int) or newcolumns <= 0:
-      raise ValueError('newcolumns must be a positive integer.')
-    self.columns = newcolumns
+    if not isinstance(newcolumns, int):
+      raise ValueError("'newcolumns' must be an integer.")
+    if newcolumns == 0:
+      newcolumns = 65536
+    self.columns = abs(newcolumns)
     return self.columns
 
   def set_rows(self, newrows: int) -> int:
@@ -166,7 +171,7 @@ class Msg:
       m.set_rows(40)
     """
     if not isinstance(newrows, int) or newrows <= 0:
-      raise ValueError('newrows must be a positive integer.')
+      raise ValueError("'newrows' must be a positive integer.")
     self.rows = newrows
     return self.rows
 
