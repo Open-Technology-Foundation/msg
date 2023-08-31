@@ -1,6 +1,6 @@
-# Msg - Terminal Message Printing Module
+# Msg: Terminal Messaging Module
 
-A Python module that provides the `Msg` class to handle the printing of simple, coloured, and formatted messages to the terminal. Features include automatic terminal size detection, global message prefix, custom formatting, colour and style control, and optional text wrapping.
+This Python `Msg` class handle printing of simple, coloured, and formatted messages to the terminal.  Features include automatic terminal size detection, global message prefix, custom formatting, colour and style control, and optional text wrapping.
 
 ## Features
 
@@ -12,7 +12,7 @@ A Python module that provides the `Msg` class to handle the printing of simple, 
 
 ## Installation
 
-The class requires the `colorama` package for colour handling. Make sure to install it using:
+The class requires the `colorama` package for colour handling. 
 
 \`\`\`bash
 pip install colorama
@@ -60,6 +60,8 @@ See the examples provided at the end of the `msg.py` file to explore various way
 
 For more detailed examples and comprehensive method documentation, please refer to the docstrings within the `msg.py` file.
 
+The `unittests` subdirectory contains `msg-test.py` for testing and validation.
+
 ## Notes
 
 - Colours can also be set using abbreviations (see `set_colors()` method in the code).
@@ -71,9 +73,6 @@ This project is released under the GPL 3 License. See the LICENSE file for more 
 
 ## Contributing
 
-If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcome.
+Feel free to submit pull requests or open issues to improve the modules in this package.
 
-## Support
-
-If you encounter any issues, please open an issue on GitHub.
-
+https://github.com/Open-Technology-Foundation/msg.git
