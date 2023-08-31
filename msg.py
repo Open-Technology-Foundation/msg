@@ -84,6 +84,7 @@ class Msg:
       info_fore:str=colorama.Fore.GREEN,  info_back:str=colorama.Back.BLACK,  info_style:str=colorama.Style.DIM,
       warn_fore:str=colorama.Fore.YELLOW, warn_back:str=colorama.Back.BLACK,  warn_style:str=colorama.Style.NORMAL,
       error_fore:str=colorama.Fore.RED,   error_back:str=colorama.Back.BLACK, error_style:str=colorama.Style.BRIGHT):
+    self.version = __version__
     """
     Initialises the msg object, setting default terminal size, 
     colour usage and message prefix.
